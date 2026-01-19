@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ $# -lt 3 ]; then
+  echo -e "\nERRO: Faltam argumentos. Utilize o script dessa forma:
+./mk-lsfg-proton <endereço da pasta do proton> <nome do proton sem espaços>
+<nome que vai ser usado no LSFG_PROCESS>
+\nOS NOMES DO PROTON E LSFG_PROCESS NÃO PODEM CONTER ESPAÇOS" >&2
+  exit 1
+fi
+
+PASTA_PROTON="$1"
+NOME_PROTON="$2"
+NOME_LSFG="$3"
+
+app() {
+  mkdir "$NOME_PROTON"
+  cd "$NOME_PROTON"
+  cp "$PASTA_PROTON"/{compatibilitytool.vdf,proton,version,user_settings.sample.py} ./
+  ln -s "$PASTA_PROTON"/* ./ 2>/dev/null
+  mv ./user_settings.sample.py ./user_settings.py
+  sed -i "/\"PROTON_LOG\": \"1\",/a \    \"LSFG_PROCESS\": \"$NOME_LSFG\"," user_settings.py
+  NOME_ANTIGO=$(sed -E -n 's/.*[0-9] (.*$)/\1/p' version)
+  sed -i "s/\".*$NOME_ANTIGO.*\"/\"$NOME_PROTON\"/g" compatibilitytool.vdf
+  sed -i "s/$NOME_ANTIGO/$NOME_PROTON/g" version
+}
+
+app
