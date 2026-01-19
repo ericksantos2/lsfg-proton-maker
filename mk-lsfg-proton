@@ -11,8 +11,7 @@ if [ $# -lt 3 ]; then
 fi
 
 if [[ " $@ " =~ " --standalone " ]]; then
-    echo "Argumento encontrado!"
-    STANDALONE=1
+    STANDALONE=true
 fi
 
 PASTA_PROTON="$1"
