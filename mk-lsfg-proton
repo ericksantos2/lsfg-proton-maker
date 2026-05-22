@@ -26,7 +26,8 @@ app() {
   mv ./user_settings.sample.py ./user_settings.py
   sed -i "/\"PROTON_LOG\": \"1\",/a \    \"LSFG_PROCESS\": \"$NOME_LSFG\"," user_settings.py
   NOME_ANTIGO=$(sed -E -n 's/.*[0-9] (.*$)/\1/p' version)
-  sed -i "s/\".*$NOME_ANTIGO.*\"/\"$NOME_PROTON\"/g" compatibilitytool.vdf
+  NOME_ANTIGO_COMPAT=$(grep '"display_name"' compatibilitytool.vdf | sed -E 's/.*" "(.*)"/\1/')
+  sed -i "s/$NOME_ANTIGO_COMPAT/$NOME_PROTON/g" compatibilitytool.vdf
   sed -i "s/$NOME_ANTIGO/$NOME_PROTON/g" version
 }
 
